@@ -1,0 +1,30 @@
+<div class="themeTabs-wrap">
+    <ul class="themeTabs">
+        <?php foreach($this->items as $item): ?>
+            <li class="themeTabs-item">
+                <a href="<?php echo $item['href'] ?>" class="themeTabs-link<?php if($item['active']) echo ' active' ?>">
+                    <?php echo $item['label']?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <div class="themesearch">
+        <select class="tl_chosen">
+            <option>Search</option>
+        <?php foreach($this->themePartData as $k=>$v): ?>
+             <optgroup label="<?php echo $k; ?>">
+            <?php foreach($v as $data): ?>
+                <option value="contao/main.php?do=themes&table=<?php echo $k; ?>&act=edit&id=<?php echo $data['id']; ?>&rt=<?php echo $this->rt; ?>"><?php echo $data['name']; ?></option>
+            <?php endforeach; ?>
+            </optgroup>
+        <?php endforeach; ?>
+        </select>
+    </div>
+</div>
+
+<script>
+    document.getElement('.themesearch select').addEvent('change', function(e) {
+        location.href = this.get('value');
+    });
+</script>
