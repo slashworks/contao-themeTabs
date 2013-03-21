@@ -1,4 +1,4 @@
-# themeTabs for contao #
+# themeTabs for contao 3 #
 
 This module gives you the ability to easily switch between the theme sections stylesheet, modules and layout.
 
