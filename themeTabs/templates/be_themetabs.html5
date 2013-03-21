@@ -9,22 +9,31 @@
         <?php endforeach; ?>
     </ul>
 
-    <div class="themesearch">
-        <select class="tl_chosen">
-            <option>Search</option>
-        <?php foreach($this->themePartData as $k=>$v): ?>
-             <optgroup label="<?php echo $k; ?>">
-            <?php foreach($v as $data): ?>
-                <option value="contao/main.php?do=themes&table=<?php echo $k; ?>&act=edit&id=<?php echo $data['id']; ?>&rt=<?php echo $this->rt; ?>"><?php echo $data['name']; ?></option>
-            <?php endforeach; ?>
-            </optgroup>
-        <?php endforeach; ?>
-        </select>
-    </div>
+    <?php if(count($this->themePartData) > 0): ?>
+        <div class="themesearch">
+            <select class="tl_chosen">
+                <option>-</option>
+                <?php foreach($this->themePartData as $k=>$v): ?>
+                    <optgroup label="<?php echo $this->typeMap[$k]['label']; ?>">
+                        <?php foreach($v as $data): ?>
+                            <option value="contao/main.php?do=themes&table=<?php echo $k; ?>&act=edit&id=<?php echo $data['id']; ?>&rt=<?php echo $this->rt; ?>"><?php echo $data['name']; ?></option>
+                        <?php endforeach; ?>
+                    </optgroup>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    <?php endif; ?>
 </div>
 
 <script>
-    document.getElement('.themesearch select').addEvent('change', function(e) {
-        location.href = this.get('value');
-    });
+    window.addEvent('domready', function() {
+        document.getElement('.themesearch select').addEvent('change', function(e) {
+            var _val =  this.get('value');
+
+            if(_val !== '-')
+            {
+                location.href = _val;
+            }
+        });
+    })
 </script>

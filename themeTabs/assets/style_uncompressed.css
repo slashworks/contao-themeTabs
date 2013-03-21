@@ -1,0 +1,65 @@
+/**
+ * ThemeTabs for Contao Open Source CMS
+ *
+ * Copyright (C) 2013 Joe Ray Gregory
+ *
+ * @package ThemeTabs
+ * @link    http://slash-works.de KG
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ */
+
+.themeTabs-wrap {
+    position: relative;
+}
+
+.themeTabs {
+    overflow: auto;
+    border-bottom: 5px solid #ddd;
+    margin-bottom: -25px;
+}
+
+.themeTabs-item {
+    float: left;
+    margin-right: 3px;
+}
+
+.themeTabs-link {
+    display: block;
+    padding: 5px 8px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background: #ddd ;
+    margin-top: 6px;
+    color: #898989;
+}
+
+.themeTabs-link:hover {
+    color: #898989;
+    background: #f7f7f7
+}
+
+
+.themeTabs-link.active {
+    padding: 8px 10px;
+    margin-top: 0;
+    background: #f7f7f7; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f7f7f7 0%, #dddddd 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f7f7f7 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f7f7f7 0%,#dddddd 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f7f7f7 0%,#dddddd 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f7f7f7 0%,#dddddd 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
+    color: #666966;
+}
+
+.themesearch {
+    position: absolute;
+    right: 0px;
+    bottom: 7px;
+    width: 300px;
+}
+
+.themesearch .tl_chosen {
+    width: 100%;
+}

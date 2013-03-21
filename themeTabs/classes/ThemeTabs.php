@@ -1,42 +1,87 @@
 <?php
+
 /**
- * Created by JetBrains PhpStorm.
- * User: jrgregory
- * Date: 20.03.13
- * Time: 14:56
- * To change this template use File | Settings | File Templates.
+ * ThemeTabs for Contao Open Source CMS
+ *
+ * Copyright (C) 2013 Joe Ray Gregory
+ *
+ * @package ThemeTabs
+ * @link    http://slash-works.de KG
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
 namespace Contao;
 
+/**
+ * Class ThemeTabs
+ *
+ * Backend module "theme tabs".
+ * @copyright  Joe Ray Gregory @slashworks KG 2013
+ * @author     Joe Ray Gregory <http://slash-works.de>
+ * @package    ThemeTabs
+ */
 
 class ThemeTabs extends \Backend {
+
+    static private $themeId;
+    static private $token;
+    static private $table;
+
+    /**
+     * generate the tab template
+     * @param $scope
+     */
     static public function generateTabs($scope)
     {
+        // Add css file
         $GLOBALS['TL_CSS'][] = 'system/modules/themeTabs/assets/style.css';
 
-        $themeId = \Input::get('id');
-        $table = \Input::get('table');
-        $rt = \Contao\RequestToken::get();
+        //fill class local vars
+        self::$themeId = \Input::get('id');
+        self::$table = \Input::get('table');
+        self::$token = \Contao\RequestToken::get();
 
-        $arrTypes = array('tl_style_sheet' => 'style_sheet', 'modules' => 'module', 'design' => 'layout');
-
-        $dataArr = array();
-
-
-
-        foreach($arrTypes as $k => $v)
-        {
-            $dataArr[] = array
+        //generate a data map to balanceing the differences between table names and language files
+        $arrTypes = array
+        (
+            'tl_style_sheet' => array
             (
-                'label' => $GLOBALS['TL_LANG']['MOD'][$k],
-                'href' => 'contao/main.php?do=themes&table=tl_'.$v.'&id='.$themeId.'&rt='.$rt,
-                'active' => ('tl_'.$v == $table) ? true: false
-            );
-        }
+                'table' => 'tl_style_sheet',
+                'label' => &$GLOBALS['TL_LANG']['MOD']['tl_style_sheet']
+            ),
 
+            'tl_module' => array
+            (
+                'table' => 'tl_module',
+                'label' => &$GLOBALS['TL_LANG']['MOD']['modules']
+            ),
 
+            'tl_layout' => array
+            (
+                'table' => 'tl_layout',
+                'label' => &$GLOBALS['TL_LANG']['MOD']['design']
+            )
+        );
 
+        // generate backend object
+        $tpl = new BackendTemplate('be_themetabs');
+
+        // add template vars
+        $tpl->items = self::generateTabDataAsArray($arrTypes);
+        $tpl->themePartData = self::getThemePartsAsArray();
+        $tpl->rt = self::$token;
+        $tpl->typeMap = $arrTypes;
+
+        // set the template to the message position
+        \Message::addRaw($tpl->parse());
+    }
+
+    /**
+     * get the data of each theme part
+     * @return array
+     */
+    static private function getThemePartsAsArray()
+    {
         $themePartDataObj = \Database::getInstance()->prepare('
 			(SELECT
                 l.id,
@@ -65,7 +110,7 @@ class ThemeTabs extends \Backend {
             	pid=?
             )
             ORDER BY tablename,id
-        ')->execute($themeId,$themeId,$themeId);
+        ')->execute(self::$themeId,self::$themeId,self::$themeId);
 
         $selectfields = array();
         while($themePartDataObj->next())
@@ -77,14 +122,29 @@ class ThemeTabs extends \Backend {
             );
         }
 
-        $tpl = new BackendTemplate('be_themetabs');
-
-        $tpl->items = $dataArr;
-        $tpl->themePartData = $selectfields;
-        $tpl->rt = $rt;
-        $tpl->typeMap = $arrTypes;
-
-
-        \Message::addRaw($tpl->parse());
+        return $selectfields;
     }
+
+    /**
+     * generate the the tab navigation data array
+     * @param $arrTypes
+     * @return array
+     */
+    static private function generateTabDataAsArray($arrTypes)
+    {
+        $dataArr = array();
+
+        foreach($arrTypes as $k => $v)
+        {
+            $dataArr[] = array
+            (
+                'label' => $v['label'],
+                'href' => 'contao/main.php?do=themes&table='.$v['table'].'&id='.self::$themeId.'&rt='.self::$token,
+                'active' => ($v['table'] == self::$table) ? true: false
+            );
+        }
+
+        return $dataArr;
+    }
+
 }
